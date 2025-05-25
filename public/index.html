@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT Strength Coach System - Create Programs in 5 Minutes</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #059669;
+            --primary-dark: #047857;
+            --accent: #f59e0b;
+            --dark: #1f2937;
+            --light: #f3f4f6;
+            --gray: #6b7280;
+            --max-width: 1000px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: #fff;
+        }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Urgency Banner */
+        .urgency-banner {
+            background: var(--accent);
+            color: var(--dark);
+            padding: 0.75rem;
+            text-align: center;
+            font-weight: 600;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0 60px;
+            text-align: center;
+            background: linear-gradient(180deg, #f9fafb 0%, #ffffff 100%);
+        }
+
+        h1 {
+            font-size: clamp(1.75rem, 4vw, 2.75rem);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .highlight {
+            color: var(--primary);
+            background: linear-gradient(180deg, transparent 60%, rgba(5, 150, 105, 0.2) 60%);
+        }
+
+        .subheadline {
+            font-size: 1.125rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-image {
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+            margin: 2rem auto;
+            background: var(--light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.125rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
+            margin-bottom: 1rem;
+        }
+
+        .cta-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+        }
+
+        .price-block {
+            font-size: 1.125rem;
+            margin: 1rem 0;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: #9ca3af;
+        }
+
+        .new-price {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        /* Trust Badges */
+        .trust-badges {
+            padding: 3rem 0;
+            background: var(--light);
+            text-align: center;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .badge-text {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* What's Included */
+        .included {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-weight: 700;
+        }
+
+        .included-grid {
+            display: grid;
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .included-item {
+            background: white;
+            border: 2px solid var(--light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: start;
+            transition: all 0.3s ease;
+        }
+
+        .included-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .included-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-weight: 700;
+        }
+
+        .included-content h3 {
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+            color: var(--dark);
+        }
+
+        .included-content p {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        /* Demo Section */
+        .demo {
+            padding: 4rem 0;
+            background: var(--light);
+        }
+
+        .demo-box {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .demo-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .demo-content {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: var(--dark);
+        }
+
+        /* Bonuses */
+        .bonuses {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .bonuses .section-title {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .bonus-timer {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .bonus-list {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .bonus-item {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .bonus-item::before {
+            content: "🎁";
+            font-size: 1.5rem;
+        }
+
+        /* Value Stack */
+        .value-stack {
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .stack-table {
+            max-width: 500px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .stack-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--light);
+        }
+
+        .stack-row:last-child {
+            border-bottom: none;
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        /* Guarantee */
+        .guarantee {
+            padding: 4rem 0;
+            background: var(--light);
+        }
+
+        .guarantee-box {
+            background: white;
+            border: 3px solid var(--primary);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .guarantee-box h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .guarantee-badge {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* FAQ */
+        .faq {
+            padding: 4rem 0;
+        }
+
+        .faq-item {
+            max-width: 700px;
+            margin: 0 auto 1rem;
+            background: white;
+            border: 1px solid var(--light);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--light);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+            padding: 1rem 1.5rem;
+        }
+
+        /* Final CTA */
+        .final-cta {
+            padding: 4rem 0;
+            background: var(--dark);
+            color: white;
+            text-align: center;
+        }
+
+        .final-cta h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .final-cta .cta-button {
+            background: var(--accent);
+            color: var(--dark);
+        }
+
+        .final-cta .cta-button:hover {
+            background: #dc8a04;
+        }
+
+        /* Order Bump */
+        .order-bump {
+            max-width: 600px;
+            margin: 2rem auto;
+            background: #fef3c7;
+            border: 2px dashed var(--accent);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: left;
+        }
+
+        .order-bump-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .order-bump-checkbox {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .order-bump-title {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 1.125rem;
+        }
+
+        .order-bump-content {
+            margin-left: 2.5rem;
+            color: #92400e;
+        }
+
+        .order-bump-price {
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        /* Checkout Form */
+        .checkout-form {
+            max-width: 500px;
+            margin: 2rem auto;
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--light);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        #card-element {
+            padding: 0.75rem;
+            border: 2px solid var(--light);
+            border-radius: 8px;
+            background: white;
+        }
+
+        .stripe-error {
+            color: #e53e3e;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Email Capture Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 32px;
+            height: 32px;
+            background: var(--light);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: var(--gray);
+        }
+
+        .modal-close:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .modal h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .modal p {
+            margin-bottom: 1.5rem;
+            color: #6b7280;
+        }
+
+        .modal .form-input {
+            margin-bottom: 1rem;
+        }
+
+        .modal .cta-button {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-disclaimer {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+
+        /* Total Price Display */
+        .total-price {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            font-size: 1.125rem;
+        }
+
+        .total-price-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem 0;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 0 40px;
+            }
+
+            .badges-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+
+            .modal-content {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Urgency Banner -->
+    <div class="urgency-banner">
+        ⚡ First 100 Coaches Only - 83 Spots Left at $47 (Then Price Increases to $67)
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Former D1 Athlete with MS in Movement Science Reveals: <span class="highlight">The 75+ ChatGPT Prompts</span> That Let You Create Professional Strength Programs in 5 Minutes</h1>
+            <p class="subheadline">Stop spending hours on program design. Start using AI to build better programs faster than ever before.</p>
+            
+            <div class="hero-image">💪 + 🤖 = ⚡</div>
+            
+            <a href="#get-access" class="cta-button">Get Instant Access</a>
+            
+            <div class="price-block">
+                <span class="old-price">Regular Price: $361</span> → 
+                <span class="new-price">Today Only: $47</span>
+                <br>
+                <small style="color: #6b7280;">Instant download • 30-day guarantee</small>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Badges -->
+    <section class="trust-badges">
+        <div class="container">
+            <div class="badges-grid">
+                <div class="badge">
+                    <div class="badge-icon">🎓</div>
+                    <div class="badge-text">M.S. Movement Science</div>
+                    <small>University of Michigan</small>
+                </div>
+                <div class="badge">
+                    <div class="badge-icon">🏆</div>
+                    <div class="badge-text">130,000+ Athletes</div>
+                    <small>Trained via Podium Athletics</small>
+                </div>
+                <div class="badge">
+                    <div class="badge-icon">📱</div>
+                    <div class="badge-text">120.4k Followers</div>
+                    <small>@toncafitness on TikTok</small>
+                </div>
+                <div class="badge">
+                    <div class="badge-icon">👨‍🏫</div>
+                    <div class="badge-text">University Lecturer</div>
+                    <small>CSU San Marcos</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What's Included -->
+    <section class="included">
+        <div class="container">
+            <h2 class="section-title">What You Get Instantly:</h2>
+            
+            <div class="included-grid">
+                <div class="included-item">
+                    <div class="included-icon">75+</div>
+                    <div class="included-content">
+                        <h3>Battle-Tested AI Prompts</h3>
+                        <p>Copy-paste prompts for program creation, exercise selection, periodization, and more. Works with ChatGPT, Claude, or any AI tool.</p>
+                    </div>
+                </div>
+
+                <div class="included-item">
+                    <div class="included-icon">20</div>
+                    <div class="included-content">
+                        <h3>Instant Workout Generators</h3>
+                        <p>Create complete training programs for any sport, skill level, or goal in under 5 minutes. Includes hypertrophy, strength, and athletic performance.</p>
+                    </div>
+                </div>
+
+                <div class="included-item">
+                    <div class="included-icon">15</div>
+                    <div class="included-content">
+                        <h3>Exercise Modification Prompts</h3>
+                        <p>Never get stuck again. Instantly generate alternatives for any exercise based on equipment, injuries, or skill level.</p>
+                    </div>
+                </div>
+
+                <div class="included-item">
+                    <div class="included-icon">10</div>
+                    <div class="included-content">
+                        <h3>Client Communication Templates</h3>
+                        <p>Professional check-ins, motivation messages, and progress reviews that sound personal but take seconds to create.</p>
+                    </div>
+                </div>
+
+                <div class="included-item">
+                    <div class="included-icon">10</div>
+                    <div class="included-content">
+                        <h3>Nutrition & Meal Planning</h3>
+                        <p>Generate macro-based meal plans, pre/post workout nutrition, and supplement recommendations for any athlete.</p>
+                    </div>
+                </div>
+
+                <div class="included-item">
+                    <div class="included-icon">10</div>
+                    <div class="included-content">
+                        <h3>Business Growth Prompts</h3>
+                        <p>Create social media content, email campaigns, and client onboarding materials that position you as the expert.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section class="demo">
+        <div class="container">
+            <h2 class="section-title">See It In Action</h2>
+            <div class="demo-box">
+                <div class="demo-title">Example Prompt:</div>
+                <div class="demo-content">
+                    "Create a 4-week strength program for a high school basketball player. Focus on explosive power and injury prevention. Include 3 training days per week with warm-ups, main lifts, accessory work, and cooldowns. Equipment available: barbell, dumbbells, pull-up bar, and bands."
+                </div>
+                <p style="text-align: center; margin-top: 1rem; color: #6b7280;">
+                    <em>Result: Complete program generated in 30 seconds vs 2+ hours manually</em>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bonuses -->
+    <section class="bonuses">
+        <div class="container">
+            <h2 class="section-title">🎁 Fast Action Bonuses</h2>
+            <p class="bonus-timer">When you order in the next 24 hours:</p>
+            
+            <div class="bonus-list">
+                <div class="bonus-item">
+                    <div>
+                        <strong>Bonus #1: Quick-Start Workout Templates</strong> ($97 value)<br>
+                        5 Google Sheets templates with auto-calculating formulas
+                    </div>
+                </div>
+                <div class="bonus-item">
+                    <div>
+                        <strong>Bonus #2: 7-Day Launch Accelerator</strong> ($67 value)<br>
+                        Email templates and social posts to land clients immediately
+                    </div>
+                </div>
+                <div class="bonus-item">
+                    <div>
+                        <strong>Bonus #3: Monthly Prompt Updates</strong> ($47 value)<br>
+                        New prompts delivered as AI technology evolves
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Value Stack -->
+    <section class="value-stack">
+        <div class="container">
+            <h2 class="section-title">Here's Everything You Get:</h2>
+            
+            <div class="stack-table">
+                <div class="stack-row">
+                    <span>75+ AI Prompt Collection</span>
+                    <span>$197</span>
+                </div>
+                <div class="stack-row">
+                    <span>Workout Template Library</span>
+                    <span>$97</span>
+                </div>
+                <div class="stack-row">
+                    <span>7-Day Launch Accelerator</span>
+                    <span>$67</span>
+                </div>
+                <div class="stack-row">
+                    <span>Total Value</span>
+                    <span>$361</span>
+                </div>
+                <div class="stack-row">
+                    <span>Your Price Today</span>
+                    <span>$47</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Guarantee -->
+    <section class="guarantee">
+        <div class="container">
+            <div class="guarantee-box">
+                <div class="guarantee-badge">🛡️</div>
+                <h3>30-Day Money-Back Guarantee</h3>
+                <p>Try the ChatGPT Strength Coach System risk-free. If you don't save at least 5 hours in your first week, or if you're not completely satisfied, just email me for a full refund. No questions asked.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq">
+        <div class="container">
+            <h2 class="section-title">Common Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Do I need to be tech-savvy to use this?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Not at all! If you can copy and paste text, you can use these prompts. They work with any AI tool like ChatGPT (free version works fine) or Claude. No technical knowledge required.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Will these prompts work for my specific sport/clients?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes! The prompts are designed to be customizable for any sport, age group, or fitness level. From youth athletes to professionals, powerlifters to endurance athletes - just plug in your specific parameters.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How is this different from other prompt packs?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>These prompts were created by someone with an MS in Movement Science who's actually trained 130,000+ athletes. They're based on real coaching experience, not generic fitness advice. Plus, you get ongoing updates as AI evolves.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What if AI-generated programs aren't as good?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>These prompts don't replace your expertise - they amplify it. You still review and customize everything. Think of it as having an assistant who does the tedious work while you focus on coaching.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta" id="get-access">
+        <div class="container">
+            <h2>Ready to Save 10+ Hours Every Week?</h2>
+            <p style="margin-bottom: 2rem;">Join smart strength coaches who are working smarter, not harder</p>
+            
+            <!-- Checkout Form -->
+            <form id="payment-form" class="checkout-form">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" id="email" name="email" required placeholder="coach@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" id="name" name="name" required placeholder="John Smith">
+                </div>
+
+                <!-- Order Bump -->
+                <div class="order-bump">
+                    <div class="order-bump-header">
+                        <input type="checkbox" id="order-bump" class="order-bump-checkbox">
+                        <label for="order-bump" class="order-bump-title">
+                            ⚡ YES! Add The Advanced Nutrition Prompt Pack
+                        </label>
+                    </div>
+                    <div class="order-bump-content">
+                        <p>Get 25 additional prompts specifically for nutrition coaching, meal planning, and supplement recommendations. Perfect for coaches who want to offer complete training + nutrition packages.</p>
+                        <p><span class="order-bump-price">Add for only $17</span> (50% off regular price)</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Payment Information</label>
+                    <div id="card-element"></div>
+                    <div id="card-errors" class="stripe-error"></div>
+                </div>
+
+                <!-- Total Price Display -->
+                <div class="total-price">
+                    Total: <span class="total-price-amount" id="total-amount">$47</span>
+                </div>
+
+                <button type="submit" class="cta-button" id="submit-button" style="width: 100%; background: var(--accent); color: var(--dark);">
+                    Complete Purchase →
+                </button>
+            </form>
+            
+            <p style="margin-top: 1rem; opacity: 0.8;">
+                🔒 Secure payment by Stripe • 🛡️ 30-day guarantee
+            </p>
+            
+            <p style="margin-top: 2rem; font-size: 0.875rem; opacity: 0.7;">
+                Questions? Email support@yoursite.com
+            </p>
+        </div>
+    </section>
+
+    <!-- Email Capture Modal -->
+    <div id="exit-modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <h3>Wait! Don't Leave Empty-Handed 👋</h3>
+            <p>Get a FREE sample of 5 powerful ChatGPT prompts that will transform your coaching - delivered instantly to your inbox!</p>
+            
+            <form id="email-capture-form">
+                <input type="email" class="form-input" placeholder="Enter your email" required>
+                <button type="submit" class="cta-button">Send Me The Free Prompts</button>
+                <p class="modal-disclaimer">We respect your privacy. Unsubscribe anytime.</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Sommers Ventures LLC. All rights reserved. | Privacy Policy | Terms of Service</p>
+        </div>
+    </footer>
+
+    <script>
+        // IMPORTANT: Replace 'YOUR_STRIPE_PUBLISHABLE_KEY' with your actual Stripe publishable key
+        // You'll also need to implement server endpoints for:
+        // - /process-payment (to handle Stripe payment processing)
+        // - /capture-email (to save emails to your email service)
+        
+        // Initialize Stripe
+        const stripe = Stripe('pk_live_51RH7UWGaUMVSXB8UEPsWYHns6Ekp5DrGiS5Rlbdc74wuyS6WWz7sGYOLYJTHCzTyiyrsDmUoNI77dyyl8rPFuIJK003kd6qHRc');
+        const elements = stripe.elements();
+        const cardElement = elements.create('card', {
+            style: {
+                base: {
+                    fontSize: '16px',
+                    color: '#1f2937',
+                    '::placeholder': {
+                        color: '#9ca3af',
+                    },
+                },
+            },
+        });
+        cardElement.mount('#card-element');
+
+        // Handle Stripe errors
+        cardElement.on('change', function(event) {
+            const displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        // Order Bump Logic
+        const orderBumpCheckbox = document.getElementById('order-bump');
+        const totalAmountElement = document.getElementById('total-amount');
+        let basePrice = 47;
+        let bumpPrice = 17;
+
+        orderBumpCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                totalAmountElement.textContent = `${basePrice + bumpPrice}`;
+            } else {
+                totalAmountElement.textContent = `${basePrice}`;
+            }
+        });
+
+        // Handle form submission
+        const form = document.getElementById('payment-form');
+        const submitButton = document.getElementById('submit-button');
+
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            submitButton.disabled = true;
+            submitButton.textContent = 'Processing...';
+
+            const {error, paymentMethod} = await stripe.createPaymentMethod({
+                type: 'card',
+                card: cardElement,
+                billing_details: {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                },
+            });
+
+            if (error) {
+                // Show error to customer
+                document.getElementById('card-errors').textContent = error.message;
+                submitButton.disabled = false;
+                submitButton.textContent = 'Complete Purchase →';
+            } else {
+                // Send paymentMethod.id to your server
+                const response = await fetch('/process-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        payment_method_id: paymentMethod.id,
+                        email: document.getElementById('email').value,
+                        name: document.getElementById('name').value,
+                        amount: orderBumpCheckbox.checked ? (basePrice + bumpPrice) * 100 : basePrice * 100,
+                        order_bump: orderBumpCheckbox.checked,
+                    }),
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Redirect to success page
+                    window.location.href = '/success';
+                } else {
+                    document.getElementById('card-errors').textContent = result.error;
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Complete Purchase →';
+                }
+            }
+        });
+
+        // Exit Intent Modal
+        let modalShown = false;
+        const modal = document.getElementById('exit-modal');
+
+        function showModal() {
+            if (!modalShown && !localStorage.getItem('emailCaptured')) {
+                modal.style.display = 'flex';
+                modalShown = true;
+            }
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // Show modal on exit intent
+        document.addEventListener('mouseout', function(e) {
+            if (e.toElement == null && e.relatedTarget == null) {
+                showModal();
+            }
+        });
+
+        // Mobile exit intent (scroll up quickly)
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop < lastScrollTop && lastScrollTop - scrollTop > 50) {
+                if (scrollTop < 100) {
+                    showModal();
+                }
+            }
+            lastScrollTop = scrollTop;
+        });
+
+        // Handle email capture form
+        const emailCaptureForm = document.getElementById('email-capture-form');
+        emailCaptureForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = e.target.querySelector('input[type="email"]').value;
+            
+            // Send to your email service (ConvertKit, etc.)
+            await fetch('/capture-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: email }),
+            });
+            
+            localStorage.setItem('emailCaptured', 'true');
+            closeModal();
+            alert('Check your email for your free prompts!');
+        });
+
+        // Click outside modal to close
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                item.classList.toggle('active');
+            });
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Countdown Timer (24 hours)
+        function updateTimer() {
+            const deadline = new Date();
+            deadline.setHours(deadline.getHours() + 24);
+            
+            const timer = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = deadline - now;
+                
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                const timerElement = document.querySelector('.bonus-timer');
+                if (timerElement) {
+                    timerElement.innerHTML = `⏰ Bonuses expire in: ${hours}h ${minutes}m ${seconds}s`;
+                }
+                
+                if (distance < 0) {
+                    clearInterval(timer);
+                    timerElement.innerHTML = "Bonus period has ended";
+                }
+            }, 1000);
+        }
+        
+        updateTimer();
+    </script>
+</body>
+</html>
