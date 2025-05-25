@@ -112,6 +112,12 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
         }
+        
+        .cta-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
 
         .price-block {
             font-size: 1.125rem;
@@ -396,23 +402,8 @@
         /* Final CTA */
         .final-cta {
             padding: 4rem 0;
-            background: var(--dark);
-            color: white;
-            text-align: center;
-        }
-
-        .final-cta h2 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .final-cta .cta-button {
-            background: var(--accent);
+            background: var(--light);
             color: var(--dark);
-        }
-
-        .final-cta .cta-button:hover {
-            background: #dc8a04;
         }
 
         /* Order Bump */
@@ -437,6 +428,7 @@
             width: 24px;
             height: 24px;
             cursor: pointer;
+            accent-color: var(--primary);
         }
 
         .order-bump-title {
@@ -457,8 +449,7 @@
 
         /* Checkout Form */
         .checkout-form {
-            max-width: 500px;
-            margin: 2rem auto;
+            max-width: 100%;
             text-align: left;
         }
 
@@ -471,6 +462,7 @@
             font-weight: 600;
             margin-bottom: 0.5rem;
             color: var(--dark);
+            font-size: 0.875rem;
         }
 
         .form-input {
@@ -491,6 +483,12 @@
             padding: 0.75rem;
             border: 2px solid var(--light);
             border-radius: 8px;
+            background: #f9fafb;
+            transition: all 0.3s ease;
+        }
+        
+        #card-element.StripeElement--focus {
+            border-color: var(--primary);
             background: white;
         }
 
@@ -586,11 +584,12 @@
         /* Total Price Display */
         .total-price {
             background: var(--light);
-            border-radius: 8px;
-            padding: 1rem;
+            border-radius: 12px;
+            padding: 1.5rem;
             margin: 1.5rem 0;
             text-align: center;
             font-size: 1.125rem;
+            border: 2px solid var(--primary);
         }
 
         .total-price-amount {
@@ -874,60 +873,177 @@
     <!-- Final CTA -->
     <section class="final-cta" id="get-access">
         <div class="container">
-            <h2>Ready to Save 10+ Hours Every Week?</h2>
-            <p style="margin-bottom: 2rem;">Join smart strength coaches who are working smarter, not harder</p>
-            
-            <!-- Checkout Form -->
-            <form id="payment-form" class="checkout-form">
-                <div class="form-group">
-                    <label class="form-label">Email Address</label>
-                    <input type="email" class="form-input" id="email" name="email" required placeholder="coach@example.com">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Full Name</label>
-                    <input type="text" class="form-input" id="name" name="name" required placeholder="John Smith">
-                </div>
-
-                <!-- Order Bump -->
-                <div class="order-bump">
-                    <div class="order-bump-header">
-                        <input type="checkbox" id="order-bump" class="order-bump-checkbox">
-                        <label for="order-bump" class="order-bump-title">
-                            ⚡ YES! Add The Advanced Nutrition Prompt Pack
-                        </label>
-                    </div>
-                    <div class="order-bump-content">
-                        <p>Get 25 additional prompts specifically for nutrition coaching, meal planning, and supplement recommendations. Perfect for coaches who want to offer complete training + nutrition packages.</p>
-                        <p><span class="order-bump-price">Add for only $17</span> (50% off regular price)</p>
+            <div style="max-width: 700px; margin: 0 auto;">
+                <!-- Section Header -->
+                <div style="text-align: center; margin-bottom: 3rem;">
+                    <h2 style="font-size: 2.5rem; color: var(--dark); margin-bottom: 1rem;">Complete Your Order</h2>
+                    <p style="font-size: 1.125rem; color: var(--gray);">Instant access to 75+ professional AI prompts</p>
+                    
+                    <!-- Security Badges -->
+                    <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap;">
+                        <span style="display: flex; align-items: center; gap: 0.5rem; color: var(--gray);">
+                            🔒 Secure Checkout
+                        </span>
+                        <span style="display: flex; align-items: center; gap: 0.5rem; color: var(--gray);">
+                            💳 All Cards Accepted
+                        </span>
+                        <span style="display: flex; align-items: center; gap: 0.5rem; color: var(--gray);">
+                            ⚡ Instant Delivery
+                        </span>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Payment Information</label>
-                    <div id="card-element"></div>
-                    <div id="card-errors" class="stripe-error"></div>
+                <!-- Checkout Form Card -->
+                <div style="background: white; border-radius: 16px; padding: 2.5rem; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid #e5e7eb;">
+                    <form id="payment-form" class="checkout-form">
+                        <!-- Contact Information -->
+                        <div style="margin-bottom: 2rem;">
+                            <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--dark); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="background: var(--primary); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.875rem;">1</span>
+                                Contact Information
+                            </h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" class="form-input" id="email" name="email" required placeholder="coach@example.com" style="background: #f9fafb;">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-input" id="name" name="name" required placeholder="John Smith" style="background: #f9fafb;">
+                            </div>
+                        </div>
+
+                        <!-- Order Summary -->
+                        <div style="margin-bottom: 2rem;">
+                            <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--dark); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="background: var(--primary); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.875rem;">2</span>
+                                Order Summary
+                            </h3>
+
+                            <!-- Main Product -->
+                            <div style="background: #f9fafb; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600; color: var(--dark);">ChatGPT Strength Coach System</div>
+                                        <div style="font-size: 0.875rem; color: var(--gray);">75+ AI Prompts for Program Design</div>
+                                    </div>
+                                    <div style="font-weight: 600; color: var(--dark);">$47</div>
+                                </div>
+                            </div>
+
+                            <!-- Order Bump - Redesigned -->
+                            <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid var(--accent); border-radius: 12px; padding: 1.25rem; position: relative; overflow: hidden;">
+                                <div style="position: absolute; top: -20px; right: -20px; background: var(--accent); color: white; padding: 0.5rem 2rem; transform: rotate(12deg); font-size: 0.75rem; font-weight: 700;">SPECIAL OFFER</div>
+                                
+                                <div style="display: flex; gap: 1rem; align-items: start;">
+                                    <input type="checkbox" id="order-bump" class="order-bump-checkbox" style="margin-top: 0.25rem;">
+                                    <div style="flex: 1;">
+                                        <label for="order-bump" style="cursor: pointer;">
+                                            <div style="font-weight: 700; color: var(--dark); margin-bottom: 0.5rem;">
+                                                ⚡ YES! Add The Advanced Nutrition Prompt Pack
+                                            </div>
+                                            <div style="font-size: 0.875rem; color: #92400e; margin-bottom: 0.5rem;">
+                                                Get 25 additional prompts specifically for nutrition coaching, meal planning, and supplement recommendations. Perfect for coaches who want to offer complete training + nutrition packages.
+                                            </div>
+                                            <div style="font-weight: 700; color: var(--accent);">
+                                                Add for only $17 <span style="text-decoration: line-through; color: #92400e; font-weight: 400;">$37</span> (Save 54%)
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Information -->
+                        <div style="margin-bottom: 2rem;">
+                            <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--dark); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="background: var(--primary); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.875rem;">3</span>
+                                Payment Details
+                            </h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Card Information</label>
+                                <div id="card-element" style="background: #f9fafb;"></div>
+                                <div id="card-errors" class="stripe-error"></div>
+                            </div>
+
+                            <!-- Powered by Stripe -->
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; font-size: 0.75rem; color: var(--gray);">
+                                <span>Powered by</span>
+                                <svg width="32" height="14" viewBox="0 0 32 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M6.5 2.5C6.5 1.67157 7.17157 1 8 1C8.82843 1 9.5 1.67157 9.5 2.5C9.5 3.32843 8.82843 4 8 4C7.17157 4 6.5 3.32843 6.5 2.5Z" fill="#635BFF"/>
+                                    <path d="M0 5.5H2.5V13H5V5.5H7.5V3H0V5.5Z" fill="#635BFF"/>
+                                    <path d="M11 3V13H13.5V10H15.5C17.4 10 19 8.5 19 6.5C19 4.5 17.4 3 15.5 3H11ZM13.5 5.5H15.5C16 5.5 16.5 6 16.5 6.5C16.5 7 16 7.5 15.5 7.5H13.5V5.5Z" fill="#635BFF"/>
+                                    <path d="M20.5 3V13H26.5V10.5H23V9H26V6.5H23V5.5H26.5V3H20.5Z" fill="#635BFF"/>
+                                    <path d="M28 13H30.5V3H28V13Z" fill="#635BFF"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Total Price Display -->
+                        <div style="background: var(--light); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; border: 2px solid var(--primary);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <span style="color: var(--gray);">Subtotal</span>
+                                <span style="color: var(--gray);" id="subtotal">$47.00</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 1.25rem; font-weight: 700; color: var(--dark); padding-top: 0.5rem; border-top: 1px solid #e5e7eb;">
+                                <span>Total Due Today</span>
+                                <span class="total-price-amount" id="total-amount" style="color: var(--primary);">$47</span>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="cta-button" id="submit-button" style="width: 100%; font-size: 1.25rem; padding: 1rem; position: relative;">
+                            <span id="button-text">Complete Purchase →</span>
+                            <div id="spinner" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                <div style="border: 3px solid #f3f4f6; border-top: 3px solid white; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite;"></div>
+                            </div>
+                        </button>
+
+                        <!-- Guarantee -->
+                        <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 0.5rem;">
+                                <span style="font-size: 2rem;">🛡️</span>
+                                <span style="font-weight: 600; color: var(--dark);">30-Day Money-Back Guarantee</span>
+                            </div>
+                            <p style="font-size: 0.875rem; color: var(--gray); max-width: 500px; margin: 0 auto;">
+                                If you don't save at least 5 hours in your first week, get a full refund. No questions asked.
+                            </p>
+                        </div>
+                    </form>
                 </div>
 
-                <!-- Total Price Display -->
-                <div class="total-price">
-                    Total: <span class="total-price-amount" id="total-amount">$47</span>
-                </div>
-
-                <button type="submit" class="cta-button" id="submit-button" style="width: 100%; background: var(--accent); color: var(--dark);">
-                    Complete Purchase →
-                </button>
-            </form>
-            
-            <p style="margin-top: 1rem; opacity: 0.8;">
-                🔒 Secure payment by Stripe • 🛡️ 30-day guarantee
-            </p>
-            
-            <p style="margin-top: 2rem; font-size: 0.875rem; opacity: 0.7;">
-                Questions? Email support@yoursite.com
-            </p>
+                <!-- Support -->
+                <p style="text-align: center; margin-top: 2rem; font-size: 0.875rem; color: var(--gray);">
+                    Questions? Email support@sommersventures.com or call (760) 672-4519
+                </p>
+            </div>
         </div>
     </section>
+
+    <style>
+        /* Add spinning animation */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Update form input styles for better contrast */
+        .form-input {
+            background: #f9fafb !important;
+            border: 2px solid #e5e7eb !important;
+        }
+        
+        .form-input:focus {
+            border-color: var(--primary) !important;
+            background: white !important;
+        }
+        
+        #card-element {
+            background: #f9fafb !important;
+        }
+    </style>
 
     <!-- Email Capture Modal -->
     <div id="exit-modal" class="modal">
@@ -965,10 +1081,15 @@
                 base: {
                     fontSize: '16px',
                     color: '#1f2937',
+                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
                     '::placeholder': {
                         color: '#9ca3af',
                     },
                 },
+                invalid: {
+                    color: '#ef4444',
+                    iconColor: '#ef4444'
+                }
             },
         });
         cardElement.mount('#card-element');
@@ -1004,7 +1125,8 @@
         form.addEventListener('submit', async function(event) {
             event.preventDefault();
             submitButton.disabled = true;
-            submitButton.textContent = 'Processing...';
+            document.getElementById('button-text').style.opacity = '0';
+            document.getElementById('spinner').style.display = 'block';
 
             const {error, paymentMethod} = await stripe.createPaymentMethod({
                 type: 'card',
@@ -1019,7 +1141,8 @@
                 // Show error to customer
                 document.getElementById('card-errors').textContent = error.message;
                 submitButton.disabled = false;
-                submitButton.textContent = 'Complete Purchase →';
+                document.getElementById('button-text').style.opacity = '1';
+                document.getElementById('spinner').style.display = 'none';
             } else {
                 // Send paymentMethod.id to your server
                 const response = await fetch('/process-payment', {
@@ -1044,7 +1167,8 @@
                 } else {
                     document.getElementById('card-errors').textContent = result.error;
                     submitButton.disabled = false;
-                    submitButton.textContent = 'Complete Purchase →';
+                    document.getElementById('button-text').style.opacity = '1';
+                    document.getElementById('spinner').style.display = 'none';
                 }
             }
         });
