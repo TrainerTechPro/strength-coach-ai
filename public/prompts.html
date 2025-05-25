@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT Strength Coach System™ - Your AI Prompt Library</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #059669;
+            --primary-dark: #047857;
+            --secondary: #f59e0b;
+            --dark: #1f2937;
+            --gray: #6b7280;
+            --light: #f3f4f6;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+        }
+
+        /* Header */
+        .header {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 2px solid var(--light);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        /* Main Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            min-height: calc(100vh - 100px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .category-list {
+            list-style: none;
+        }
+
+        .category-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .category-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            color: var(--dark);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .category-link:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+
+        .category-link.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .category-count {
+            background: rgba(0,0,0,0.1);
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .welcome-section {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+        .welcome-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .welcome-section p {
+            font-size: 1.125rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        /* Category Sections */
+        .category-section {
+            display: none;
+        }
+
+        .category-section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-description {
+            color: var(--gray);
+        }
+
+        /* Prompt Cards */
+        .prompt-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .prompt-card {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .prompt-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+
+        .prompt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .prompt-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .prompt-number {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .prompt-content {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            position: relative;
+            margin-bottom: 1rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.3s;
+        }
+
+        .copy-button:hover {
+            background: var(--primary-dark);
+        }
+
+        .copy-button.copied {
+            background: var(--secondary);
+        }
+
+        /* Mobile Responsive */
+        .mobile-menu-toggle {
+            display: none;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .sidebar {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 300px;
+                height: 100vh;
+                z-index: 1000;
+                box-shadow: 5px 0 20px rgba(0,0,0,0.1);
+            }
+
+            .sidebar.mobile-open {
+                display: block;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .header-content {
+                flex-direction: column;
+            }
+
+            .search-box {
+                max-width: 100%;
+                order: 3;
+            }
+
+            .welcome-section h1 {
+                font-size: 2rem;
+            }
+
+            .overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                z-index: 999;
+            }
+
+            .overlay.active {
+                display: block;
+            }
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Print Styles */
+        @media print {
+            .header, .sidebar, .copy-button, .mobile-menu-toggle {
+                display: none !important;
+            }
+            
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .prompt-card {
+                break-inside: avoid;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Password Protection Layer -->
+    <div id="passwordLayer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f3f4f6; z-index: 10000; display: flex; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 90%;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+            <h2 style="color: #1f2937; margin-bottom: 1rem;">Access Your Prompt Library</h2>
+            <p style="color: #6b7280; margin-bottom: 2rem;">Enter your access code to unlock your ChatGPT Strength Coach System™</p>
+            <input type="password" id="passwordInput" placeholder="Enter access code" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; margin-bottom: 1rem;" onkeypress="if(event.key==='Enter') checkPassword()">
+            <button onclick="checkPassword()" style="width: 100%; background: #059669; color: white; padding: 0.75rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.3s;">Unlock Prompts</button>
+            <p id="errorMessage" style="color: #ef4444; margin-top: 1rem; display: none;">Incorrect access code. Please try again.</p>
+            <p style="color: #9ca3af; font-size: 0.875rem; margin-top: 2rem;">Lost your code? Email support@sommersventures.com</p>
+        </div>
+    </div>
+
+    <!-- Main Content (hidden until password is correct) -->
+    <div id="mainApp" style="display: none;">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">💪 ChatGPT Strength Coach System™</div>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰ Categories</button>
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search prompts..." id="searchInput" onkeyup="searchPrompts()">
+            </div>
+        </div>
+    </header>
+
+    <!-- Overlay for mobile -->
+    <div class="overlay" onclick="toggleMobileMenu()"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <nav>
+                <ul class="category-list">
+                    <li class="category-item">
+                        <a href="#" class="category-link active" onclick="showCategory('welcome')">
+                            🏠 Welcome
+                        </a>
+                    </li>
+                    <li class="category-item">
+                        <a href="#" class="category-link" onclick="showCategory('program-creation')">
+                            📋 Program Creation
+                            <span class="category-count">20</span>
+                        </a>
+                    </li>
+                    <li class="category-item">
+                        <a href="#" class="category-link" onclick="showCategory('exercise-mods')">
+                            🔄 Exercise Modifications
+                            <span class="category-count">15</span>
+                        </a>
+                    </li>
+                    <li class="category-item">
+                        <a href="#" class="category-link" onclick="showCategory('communication')">
+                            💬 Client Communication
+                            <span class="category-count">10</span>
+                        </a>
+                    </li>
+                    <li class="category-item">
+                        <a href="#" class="category-link" onclick="showCategory('nutrition')">
+                            🥗 Nutrition Guidance
+                            <span class="category-count">10</span>
+                        </a>
+                    </li>
+                    <li class="category-item">
+                        <a href="#" class="category-link" onclick="showCategory('social-media')">
+                            📱 Social Media Content
+                            <span class="category-count">10</span>
+                        </a>
+                    </li>
+                    <li class="category-item">
+                        <a href="#" class="category-link" onclick="showCategory('business')">
+                            💼 Business Operations
+                            <span class="category-count">10</span>
+                        </a>
+                    </li>
+                    <li class="category-item">
+                        <a href="#" class="category-link" onclick="showCategory('bonus')">
+                            🎯 Bonus Prompts
+                            <span class="category-count">3</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Welcome Section -->
+            <div class="category-section active" id="welcome">
+                <div class="welcome-section">
+                    <h1>Welcome to Your AI Prompt Library</h1>
+                    <p>75+ battle-tested prompts to revolutionize your coaching business. Save 10+ hours every week while delivering better programs.</p>
+                    
+                    <div class="quick-stats">
+                        <div class="stat-card">
+                            <div class="stat-number">75+</div>
+                            <div class="stat-label">Professional Prompts</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">6</div>
+                            <div class="stat-label">Categories</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">10+</div>
+                            <div class="stat-label">Hours Saved Weekly</div>
+                        </div>
+                    </div>
+
+                    <h2 style="margin-bottom: 1rem;">🚀 Quick Start Guide</h2>
+                    <ol style="text-align: left; max-width: 600px; margin: 0 auto; line-height: 2;">
+                        <li>Browse categories in the sidebar or search for specific prompts</li>
+                        <li>Click "Copy" to grab any prompt template</li>
+                        <li>Replace [bracketed] sections with your specific information</li>
+                        <li>Paste into ChatGPT, Claude, or any AI assistant</li>
+                        <li>Customize the output as needed for your clients</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Dynamic content will be loaded here -->
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2024 ChatGPT Strength Coach System™ | Developed by Tony Sommers, MS Movement Science</p>
+    </footer>
+    </div> <!-- End of mainApp -->
+
+    <script>
+        // Password Protection
+        const CORRECT_PASSWORD = 'strengthcoach2024'; // Change this to your desired password
+        
+        function checkPassword() {
+            const input = document.getElementById('passwordInput').value;
+            const errorMsg = document.getElementById('errorMessage');
+            
+            if (input === CORRECT_PASSWORD) {
+                // Correct password - show main app
+                document.getElementById('passwordLayer').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+                
+                // Save to session storage so they don't need to re-enter during this session
+                sessionStorage.setItem('promptAccess', 'granted');
+            } else {
+                // Wrong password - show error
+                errorMsg.style.display = 'block';
+                document.getElementById('passwordInput').value = '';
+                
+                // Shake animation
+                const passwordBox = document.getElementById('passwordInput').parentElement;
+                passwordBox.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    passwordBox.style.animation = '';
+                }, 500);
+            }
+        }
+        
+        // Check if already authenticated this session
+        window.onload = function() {
+            if (sessionStorage.getItem('promptAccess') === 'granted') {
+                document.getElementById('passwordLayer').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+            }
+        };
+        
+        // Add shake animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-10px); }
+                75% { transform: translateX(10px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Prompt data structure
+        const prompts = {
+            'program-creation': {
+                title: 'Workout Program Creation',
+                description: 'Complete program templates for every situation',
+                prompts: [
+                    {
+                        number: 1,
+                        title: 'Complete Program Generator',
+                        content: `Create a [duration]-week [training goal] program for a [age] year old [gender] [sport/activity] athlete. Training experience: [beginner/intermediate/advanced]. Available equipment: [list equipment]. Training days per week: [number]. Include warm-up, main work, accessory exercises, and cool-down for each session. Focus on [specific adaptations].`
+                    },
+                    {
+                        number: 2,
+                        title: 'Periodized Strength Program',
+                        content: `Design a [number]-week periodized strength program with these phases: [list phases]. Athlete profile: [description]. Primary lifts to improve: [list lifts]. Current maxes: [list numbers]. Include weekly volume, intensity percentages, and deload protocol. Competition/testing date: [date].`
+                    },
+                    // Add all 20 program creation prompts here...
+                ]
+            },
+            'exercise-mods': {
+                title: 'Exercise Modifications & Substitutions',
+                description: 'Smart alternatives for every situation',
+                prompts: [
+                    {
+                        number: 21,
+                        title: 'Injury Modification Matrix',
+                        content: `Provide 5 alternative exercises for [original exercise] that avoid [injured area/movement pattern]. Maintain training effect for [muscle/quality]. Equipment available: [list]. Rank by similarity to original movement pattern.`
+                    },
+                    // Add all 15 exercise modification prompts here...
+                ]
+            },
+            // Add other categories...
+        };
+
+        // Show category content
+        function showCategory(categoryId) {
+            // Update active states
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.category-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show selected category
+            if (categoryId === 'welcome') {
+                document.getElementById('welcome').classList.add('active');
+                document.querySelector('[onclick="showCategory(\'welcome\')"]').classList.add('active');
+            } else {
+                // Hide welcome
+                document.getElementById('welcome').classList.remove('active');
+                
+                // Show category content
+                const category = prompts[categoryId];
+                if (category) {
+                    const mainContent = document.getElementById('mainContent');
+                    let html = `
+                        <div class="category-section active">
+                            <div class="section-header">
+                                <h2 class="section-title">${category.title}</h2>
+                                <p class="section-description">${category.description}</p>
+                            </div>
+                            <div class="prompt-grid">
+                    `;
+                    
+                    category.prompts.forEach(prompt => {
+                        html += createPromptCard(prompt);
+                    });
+                    
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Update content
+                    const welcomeSection = document.getElementById('welcome');
+                    mainContent.innerHTML = welcomeSection.outerHTML + html;
+                    
+                    // Update active link
+                    document.querySelector(`[onclick="showCategory('${categoryId}')"]`).classList.add('active');
+                }
+            }
+            
+            // Close mobile menu
+            if (window.innerWidth < 768) {
+                toggleMobileMenu();
+            }
+        }
+
+        // Create prompt card HTML
+        function createPromptCard(prompt) {
+            return `
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <h3 class="prompt-title">${prompt.title}</h3>
+                        <span class="prompt-number">#${prompt.number}</span>
+                    </div>
+                    <div class="prompt-content" id="prompt-${prompt.number}">
+${prompt.content}
+                        <button class="copy-button" onclick="copyPrompt(${prompt.number})">Copy</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Copy prompt to clipboard
+        function copyPrompt(promptNumber) {
+            const promptElement = document.getElementById(`prompt-${promptNumber}`);
+            const promptText = promptElement.innerText.replace('Copy', '').trim();
+            
+            navigator.clipboard.writeText(promptText).then(() => {
+                const button = promptElement.querySelector('.copy-button');
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Search functionality
+        function searchPrompts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (searchTerm.length < 2) {
+                showCategory('welcome');
+                return;
+            }
+            
+            let searchResults = [];
+            
+            // Search through all categories
+            Object.keys(prompts).forEach(categoryId => {
+                const category = prompts[categoryId];
+                category.prompts.forEach(prompt => {
+                    if (prompt.title.toLowerCase().includes(searchTerm) || 
+                        prompt.content.toLowerCase().includes(searchTerm)) {
+                        searchResults.push({...prompt, category: category.title});
+                    }
+                });
+            });
+            
+            // Display search results
+            displaySearchResults(searchResults, searchTerm);
+        }
+
+        // Display search results
+        function displaySearchResults(results, searchTerm) {
+            const mainContent = document.getElementById('mainContent');
+            let html = `
+                <div class="category-section active">
+                    <div class="section-header">
+                        <h2 class="section-title">Search Results</h2>
+                        <p class="section-description">Found ${results.length} prompts matching "${searchTerm}"</p>
+                    </div>
+                    <div class="prompt-grid">
+            `;
+            
+            if (results.length === 0) {
+                html += `<p style="text-align: center; color: var(--gray);">No prompts found. Try different keywords.</p>`;
+            } else {
+                results.forEach(prompt => {
+                    html += createPromptCard(prompt);
+                });
+            }
+            
+            html += `
+                    </div>
+                </div>
+            `;
+            
+            const welcomeSection = document.getElementById('welcome');
+            mainContent.innerHTML = welcomeSection.outerHTML + html;
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.overlay');
+            
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('active');
+        }
+
+        // Initialize with all prompts data
+        // (In production, you'd load this from a database or JSON file)
+        // For now, add all the prompts to the prompts object above
+    </script>
+</body>
+</html>
