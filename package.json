@@ -1,13 +1,9 @@
 {
-  "functions": {
-    "api/*.js": {
-      "maxDuration": 10
-    }
-  },
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/index.html"
-    }
-  ]
+  "name": "strength-coach-ai",
+  "version": "1.0.0",
+  "description": "ChatGPT Strength Coach System",
+  "dependencies": {
+    "stripe": "^13.0.0",
+    "nodemailer": "^6.9.0"
+  }
 }
